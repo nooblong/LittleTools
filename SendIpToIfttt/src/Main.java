@@ -10,6 +10,9 @@ public class Main {
     public static String ip = null;
 
     public static void main(String[] args) {
+        if (args[0] == null || args[1] == null){
+            System.exit(0);
+        }
         while (true) {
             //args0: key(ifttt)
             //args1: eventName(ip)
@@ -37,7 +40,7 @@ public class Main {
                         send(newIp, args[0], args[1]);
                         ip = newIp;
                     } else {
-                        Thread.sleep(50000);
+                        Thread.sleep(5000);
                     }
                 }
             } catch (Exception e) {
@@ -75,7 +78,11 @@ public class Main {
             connection.setConnectTimeout(15000);
             connection.setReadTimeout(60000);
             connection.connect();
-            System.out.println(connection.getResponseCode());
+            int code = connection.getResponseCode();
+            System.out.println(code);
+            if (connection.getResponseCode() != 200){
+                send(ip, key, eventName);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
